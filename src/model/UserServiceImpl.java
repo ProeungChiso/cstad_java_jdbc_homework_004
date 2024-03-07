@@ -9,6 +9,6 @@ public class UserServiceImpl implements UserService{
     }
     @Override
     public User getUserByID(Integer userId) {
-        return null;
+        return UserRepository.getUserByID(userId);
     }
 }

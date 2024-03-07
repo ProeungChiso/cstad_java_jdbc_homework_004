@@ -39,6 +39,34 @@ public class UserRepository{
         return userList;
     }
     public static User getUserByID(Integer userId) {
-        return null;
+        String sqlCmd = "SELECT * FROM users WHERE user_id = ?";
+        User user = null; // Initialize user as null
+        PropertiesLoader.loaderPropertiesFile();
+        try (
+                Connection connection = DriverManager.getConnection(
+                        PropertiesLoader.properties.getProperty("DATABASE_URL"),
+                        PropertiesLoader.properties.getProperty("DATABASE_USERNAME"),
+                        PropertiesLoader.properties.getProperty("DATABASE_PASSWORD")
+                );
+                PreparedStatement statement = connection.prepareStatement(sqlCmd)
+        ) {
+            statement.setInt(1, userId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    user = new User(
+                            resultSet.getInt("user_id"),
+                            resultSet.getString("user_uuid"),
+                            resultSet.getString("user_name"),
+                            resultSet.getString("user_email"),
+                            resultSet.getString("user_password"),
+                            resultSet.getBoolean("user_is_deleted"),
+                            resultSet.getBoolean("user_is_verify")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL " + e.getMessage());
+        }
+        return user;
     }
 }
