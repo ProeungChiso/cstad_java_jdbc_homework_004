@@ -12,29 +12,32 @@ import java.util.Scanner;
 import java.util.UUID;
 
 public class UserView {
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RESET = "\u001B[0m";
     private final static UserController userController = new UserController();
     public static void menuView(){
+        System.out.println(ANSI_CYAN + "+ ".repeat(13)+ANSI_CYAN+ANSI_RESET);
+        System.out.println(ANSI_CYAN + "CREATE-READ-UPDATE-DELETE"+ANSI_CYAN+ANSI_RESET);
+        System.out.println(ANSI_CYAN + "+ ".repeat(13)+ANSI_CYAN+ANSI_RESET);
+        System.out.println(ANSI_YELLOW + "ℹ\uFE0FOPTIONS" + ANSI_YELLOW+ANSI_YELLOW);
+        System.out.println(ANSI_CYAN + """
+                (1). READ    (2). SEARCH BY ID    (3). CREATE    (4). UPDATE    (5). DELETE    (6). EXIT"""+ANSI_CYAN+ANSI_RESET);
         System.out.println("+ ".repeat(13));
-        System.out.println("CREATE-READ-UPDATE-DELETE");
-        System.out.println("+ ".repeat(13));
-        System.out.println("ℹ\uFE0FOPTIONS");
-        System.out.println("""
-                (1). READ    (2). SEARCH BY ID    (3). CREATE    (4). UPDATE    (5). DELETE    (6). EXIT""");
-        System.out.println("+ ".repeat(13));
-        option();
     }
 
     public static void option(){
         int op;
         do{
+            menuView();
             System.out.print("➡\uFE0FINSERT AN OPTION: ");
             op = new Scanner(System.in).nextInt();
             switch (op){
                 case 1 -> readAllUsers();
                 case 2 -> searchUserByID();
                 case 3 -> insertNewUser();
-                case 4 -> System.out.println("Update!");
-                case 5 -> System.out.println("Delete!");
+                case 4 -> updateUserById();
+                case 5 -> deleteUser();
                 case 6 -> System.exit(0);
                 default -> System.out.println("❌Invalid option. Please try again.");
             }
@@ -46,7 +49,7 @@ public class UserView {
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
         List<User> users = userController.getAllUsers();
         System.out.println("+ ".repeat(13));
-        System.out.println("✅ALL USERS");
+        System.out.println(ANSI_YELLOW + "✅ALL USERS" + ANSI_YELLOW+ANSI_RESET);
         table.addCell("  USER ID  ");
         table.addCell("  USER UUID  ");
         table.addCell("     USER NAME     ");
@@ -72,7 +75,7 @@ public class UserView {
         int userId = new Scanner(System.in).nextInt();
         User user = userController.getUserByID(userId);
         System.out.println("+ ".repeat(13));
-        System.out.println("✅USER FOUND");
+        System.out.println(ANSI_YELLOW + "✅USER FOUND" + ANSI_YELLOW+ANSI_RESET);
         table.addCell("  USER ID  ");
         table.addCell("  USER UUID  ");
         table.addCell("     USER NAME     ");
@@ -98,15 +101,30 @@ public class UserView {
         UUID uuid = UUID.randomUUID();
         String UUID = uuid.toString().substring(0,9);
         insertUser.setUserUUID(UUID);
-        System.out.print("NAME: ");
+        System.out.print("➡\uFE0FNAME: ");
         insertUser.setUserName(new Scanner(System.in).nextLine());
-        System.out.print("EMAIL: ");
+        System.out.print("➡\uFE0FEMAIL: ");
         insertUser.setUserEmail(new Scanner(System.in).nextLine());
-        System.out.print("PASSWORD: ");
+        System.out.print("➡\uFE0FPASSWORD: ");
         insertUser.setUserPassword(new Scanner(System.in).nextLine());
         insertUser.setUserIsDeleted(false);
         insertUser.setUserIsVerify(true);
-
         userController.insertNewUser(insertUser);
+    }
+    public static void deleteUser(){
+        System.out.print("➡\uFE0FINSERT ID TO DELETE: ");
+        int userId = new Scanner(System.in).nextInt();
+        userController.deleteUser(userId);
+    }
+    public static void updateUserById(){
+        System.out.print("➡\uFE0FINSERT ID TO UPDATE: ");
+        int userId = new Scanner(System.in).nextInt();
+        System.out.print("➡\uFE0FName: ");
+        String userName = new Scanner(System.in).nextLine();
+        System.out.print("➡\uFE0FEMAIL: ");
+        String userEmail = new Scanner(System.in).nextLine();
+        System.out.print("➡\uFE0FPASSWORD: ");
+        String userPass = new Scanner(System.in).nextLine();
+        userController.updateUserById(userId, userName, userEmail, userPass);
     }
 }

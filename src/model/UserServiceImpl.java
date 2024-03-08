@@ -15,4 +15,12 @@ public class UserServiceImpl implements UserService{
     public void insertNewUser(User user) {
         UserRepository.insertNewUser(user);
     }
+    @Override
+    public void deleteUser(Integer userId) {
+        UserRepository.deleteUser(userId);
+    }
+    @Override
+    public void updateUserById(Integer userId, String userName, String userEmail, String userPass) {
+        UserRepository.updateUserById(userId, userName, userEmail, userPass);
+    }
 }
