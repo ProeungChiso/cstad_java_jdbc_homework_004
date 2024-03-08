@@ -3,8 +3,6 @@ package controller;
 import model.User;
 import model.UserService;
 import model.UserServiceImpl;
-import repository.UserRepository;
-
 import java.util.List;
 
 public class UserController {
@@ -14,5 +12,8 @@ public class UserController {
     }
     public User getUserByID(Integer userId) {
         return userService.getUserByID(userId);
+    }
+    public void insertNewUser(User user){
+        userService.insertNewUser(user);
     }
 }

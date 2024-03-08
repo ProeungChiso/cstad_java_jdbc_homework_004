@@ -11,4 +11,8 @@ public class UserServiceImpl implements UserService{
     public User getUserByID(Integer userId) {
         return UserRepository.getUserByID(userId);
     }
+    @Override
+    public void insertNewUser(User user) {
+        UserRepository.insertNewUser(user);
+    }
 }

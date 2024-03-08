@@ -9,6 +9,7 @@ import org.nocrala.tools.texttablefmt.Table;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class UserView {
     private final static UserController userController = new UserController();
@@ -31,7 +32,7 @@ public class UserView {
             switch (op){
                 case 1 -> readAllUsers();
                 case 2 -> searchUserByID();
-                case 3 -> System.out.println("Create!");
+                case 3 -> insertNewUser();
                 case 4 -> System.out.println("Update!");
                 case 5 -> System.out.println("Delete!");
                 case 6 -> System.exit(0);
@@ -91,5 +92,21 @@ public class UserView {
         } else {
             System.out.println("❌User not found with ID: " + userId);
         }
+    }
+    public static void insertNewUser() {
+        User insertUser = new User();
+        UUID uuid = UUID.randomUUID();
+        String UUID = uuid.toString().substring(0,9);
+        insertUser.setUserUUID(UUID);
+        System.out.print("NAME: ");
+        insertUser.setUserName(new Scanner(System.in).nextLine());
+        System.out.print("EMAIL: ");
+        insertUser.setUserEmail(new Scanner(System.in).nextLine());
+        System.out.print("PASSWORD: ");
+        insertUser.setUserPassword(new Scanner(System.in).nextLine());
+        insertUser.setUserIsDeleted(false);
+        insertUser.setUserIsVerify(true);
+
+        userController.insertNewUser(insertUser);
     }
 }

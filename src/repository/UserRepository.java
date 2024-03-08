@@ -69,4 +69,32 @@ public class UserRepository{
         }
         return user;
     }
+
+    public static void insertNewUser(User user){
+        String sqlCmd = "INSERT INTO users (user_uuid, user_name, user_email, user_password, user_is_deleted, user_is_verify) VALUES (?,?,?,?,?,?)";
+        PropertiesLoader.loaderPropertiesFile();
+        try(
+                Connection connection = DriverManager.getConnection(
+                        PropertiesLoader.properties.getProperty("DATABASE_URL"),
+                        PropertiesLoader.properties.getProperty("DATABASE_USERNAME"),
+                        PropertiesLoader.properties.getProperty("DATABASE_PASSWORD")
+                );
+                PreparedStatement preparedStatement = connection.prepareStatement(sqlCmd);
+        ){
+            preparedStatement.setString(1, user.getUserUUID());
+            preparedStatement.setString(2, user.getUserName());
+            preparedStatement.setString(3, user.getUserEmail());
+            preparedStatement.setString(4, user.getUserPassword());
+            preparedStatement.setBoolean(5, user.isUserIsDeleted());
+            preparedStatement.setBoolean(6, user.isUserIsVerify());
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 1) {
+                System.out.println("User inserted successfully.");
+            } else {
+                System.out.println("Failed to insert user.");
+            }
+        }catch (SQLException e){
+            System.out.println("SQL "+e.getMessage());
+        }
+    }
 }
